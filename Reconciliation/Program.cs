@@ -11,9 +11,18 @@ namespace Reconciliation
             PaymentRepository payments = new PaymentRepository();
 
             //TODO tolist here
-            IEnumerable<IGrouping<Tuple<string, int, int>, Purchase>> map = purchases.groupedByCustomerAndMonth();
+            IEnumerable<IGrouping<Tuple<string, int, int>, Purchase>> purchasesGroups = purchases.groupedByCustomerAndMonth();
 
-            map.ToList().ForEach(x => { Console.WriteLine(x.Key + " "); });
+            purchasesGroups.ToList().ForEach(group =>
+            {
+                //total sum of the purchases in a month 
+                Decimal amountDue = group.ToList().Sum(purchase =>
+                {
+                    //the sum of each item purchased
+                    return purchase.ItemIds.Sum(itemId => prices.getPriceByItemId(itemId));
+                });
+                Console.WriteLine(amountDue);
+            });
 
 
 

@@ -8,6 +8,7 @@ namespace Reconciliation
     {
         private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\Prices.xml";
         private List<ItemPrice> prices = new List<ItemPrice>();
+
         public ItemPriceRepository()
         {
             getPricesFile();
@@ -37,6 +38,12 @@ namespace Reconciliation
             }
             //prices.ForEach(Console.WriteLine);
             //Console.WriteLine(prices.ElementAt(0).Price + 1);
+        }
+
+
+        internal Decimal getPriceByItemId(string itemId)
+        {
+            return prices.Find(item => item.ItemId == itemId).Price;
         }
     }
 }
