@@ -4,9 +4,9 @@ namespace Reconciliation
 {
     internal class Purchase
     {
-        private String _customerId { get; set; }
-        private DateTime _date { get; set; }
-        private List<String> _itemIds { get; set; }
+        private String _customerId;
+        private DateTime _date;
+        private List<String> _itemIds;
         
         public String CustomerId
         {
