@@ -1,11 +1,12 @@
-﻿using System.Globalization;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 
 namespace Reconciliation
 {
     internal class Program
     {
-        static readonly string rootFolder = "C:\\Temp\\Files";
         static readonly string paymentsFile = "C:\\Temp\\Files\\Payments.json";
         static readonly string pricesFile = "C:\\Temp\\Files\\Prices.xml";
         static readonly string purchasesFile = "C:\\Temp\\Files\\Purchases.dat";
@@ -15,8 +16,20 @@ namespace Reconciliation
         {
             List<Purchase> purchases = handlePurchasesFile();
             List<ItemPrice> prices = handlePricesFile();
+            List<Payment> payments = handlePaymentsFile();
         }
 
+        private static List<Payment> handlePaymentsFile()
+        {
+            List<Payment> payments = new List<Payment>();
+            using (StreamReader r = new StreamReader(paymentsFile))
+            {
+                string json = r.ReadToEnd();
+                payments = JsonConvert.DeserializeObject<List<Payment>>(json);
+            }
+            payments.ForEach(Console.WriteLine);
+            return payments;
+        }
 
         private static List<ItemPrice> handlePricesFile()
         {
@@ -42,7 +55,7 @@ namespace Reconciliation
                 prices.Add(itemPrice);
 
             }
-            prices.ForEach(Console.WriteLine);
+            //prices.ForEach(Console.WriteLine);
             //Console.WriteLine(prices.ElementAt(0).Price + 1);
             return prices;
 
