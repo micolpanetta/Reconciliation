@@ -63,5 +63,11 @@ namespace Reconciliation
         {
            return purchases.GroupBy(purchase => new Tuple<string, int, int>(purchase.CustomerId, purchase.Date.Year, purchase.Date.Month));
         }
+
+        internal List<string> GetAllCustomersIds()
+        {
+            return purchases.Select(purchase => purchase.CustomerId).ToList();
+        }
     }
+    
 }

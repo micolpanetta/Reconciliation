@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Linq;
 
 namespace Reconciliation
 {
@@ -30,6 +31,11 @@ namespace Reconciliation
 
             return payment != null ? payment.Amount : 0;
 
+        }
+
+        internal List<string> GetAllCustomersIds()
+        {
+           return payments.Select(payment => payment.CustomerId).ToList();  
         }
     }
 }
