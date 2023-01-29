@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace Reconciliation
+﻿namespace Reconciliation
 {
     internal class Purchase
     {
