@@ -41,9 +41,9 @@ namespace Reconciliation
         }
 
 
-        internal Decimal getPriceByItemId(string itemId)
+        internal Decimal getPriceByItemId(string ItemId)
         {
-            return prices.Find(item => item.ItemId == itemId).Price;
+            return prices.Find(item => item.ItemId == ItemId).Price;
         }
     }
 }

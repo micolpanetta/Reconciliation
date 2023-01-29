@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Reconciliation.model
+﻿namespace Reconciliation
 {
     internal class Reconciliation
     {
@@ -10,8 +8,6 @@ namespace Reconciliation.model
         private int _month;
         private Decimal _amountDue;
         private Decimal _amountPayed;
-        private Decimal _balance;
-
 
         public String Customer
         {
@@ -42,13 +38,12 @@ namespace Reconciliation.model
 
         public Decimal Balance
         {
-            get => _balance;
-            set => _balance = value;
+            get => AmountDue - AmountPayed;
         }
 
         public override string? ToString()
         {
-            return "CustomerId: " + Customer + " Year: " + Year + "Month: " + Month + " AmountDue: " + AmountDue
+            return "CustomerId: " + Customer + " Year: " + Year + " Month: " + Month + " AmountDue: " + AmountDue
                 + " AmountPayed: " + AmountPayed + " Balance: " + Balance;
         }
     }
