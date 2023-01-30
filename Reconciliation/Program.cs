@@ -14,47 +14,28 @@ namespace Reconciliation
             PaymentRepository payments = new PaymentRepository();
 
             List<Reconciliation> reconciliations = new List<Reconciliation>();
-            List<String> paymentsCustomers = payments.GetAllCustomersIds();
-            List<String> purchasesCustomers = purchases.GetAllCustomersIds();
+            IEnumerable<String> mergedCustomersIds = payments.GetAllCustomersIds().Union(purchases.GetAllCustomersIds());
 
-            IEnumerable<String> customersIds = paymentsCustomers.Union(purchasesCustomers);
-
-            customersIds.ToList().ForEach(id =>
+            mergedCustomersIds.ToList().ForEach(customerId =>
             {
-
-                for (int i = 1; i < 13; i++)
+                for (int month = 1; month < 13; month++)
                 {
+                    List<Purchase> monthlyPurchases = purchases.GetByCustomerYearMonth(customerId, 2018, month); // fare variabile anno
+                    
+                    Decimal amountDue = monthlyPurchases.Sum(purchase =>
+                    {
+                        return purchase.ItemIds.Sum(itemId => prices.getPriceByItemId(itemId)); //TODO total in purchase
+                    });
 
                     reconciliations.Add(new Reconciliation
                     {
-                        Customer = id,
+                        Customer = customerId,
                         Year = 2018,
-                        Month = i,
+                        Month = month,
+                        AmountDue = amountDue,
+                        AmountPayed = payments.GetAmountByCustomerYearMonth(customerId, 2018, month) //verificare convenzione BY
                     });
-
-
                 }
-
-            });
-
-            //TODO tolist here
-            IEnumerable<IGrouping<Tuple<string, int, int>, Purchase>> purchasesGroups = purchases.groupedByCustomerAndMonth();
-
-            reconciliations.ToList().ForEach(rec =>
-            {
-                IGrouping<Tuple<string, int, int>, Purchase> group = purchasesGroups.ToList().Find(g => g.Key.Item1 == rec.Customer && g.Key.Item2 == rec.Year && g.Key.Item3 == rec.Month);
-                //total sum of the purchases in a month 
-                Decimal amountDue = group == null ? 0 : group.ToList().Sum(purchase =>
-                {
-                    //the sum of each item purchased
-                    return purchase.ItemIds.Sum(itemId => prices.getPriceByItemId(itemId)); //TODO total in purchase
-                });
-               //Console.WriteLine(amountDue);
-
-                rec.AmountDue = amountDue;
-                //TODO migliorabile?
-                rec.AmountPayed = payments.GetAmountByCustomerYearMonth(rec.Customer, rec.Year, rec.Month);  //verificare convenzione BY
-
             });
 
             reconciliations = reconciliations.FindAll(rec => rec.Balance != Decimal.Zero).OrderByDescending(rec => Math.Abs(rec.Balance)).ToList();

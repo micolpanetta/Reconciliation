@@ -59,14 +59,14 @@ namespace Reconciliation
 
         }
 
-        internal IEnumerable<IGrouping<Tuple<string, int, int>, Purchase>> groupedByCustomerAndMonth()
-        {
-           return purchases.GroupBy(purchase => new Tuple<string, int, int>(purchase.CustomerId, purchase.Date.Year, purchase.Date.Month));
-        }
-
         internal List<string> GetAllCustomersIds()
         {
             return purchases.Select(purchase => purchase.CustomerId).ToList();
+        }
+
+        internal List<Purchase> GetByCustomerYearMonth(string Customer, int Year, int Month)
+        {
+            return purchases.FindAll(purchase => purchase.CustomerId == Customer && purchase.Date.Year == Year && purchase.Date.Month == Month);
         }
     }
     
