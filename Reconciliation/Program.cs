@@ -9,6 +9,9 @@ namespace Reconciliation
         //TODO verificare metodi iniziano con maiuscola e capire convenzione esatta variabili
         static void Main(string[] args)
         {
+            //capire come passare format
+            String format = "csv";
+
             PurchaseRepository purchases = new PurchaseRepository();
             ItemPriceRepository prices = new ItemPriceRepository();
             PaymentRepository payments = new PaymentRepository();
@@ -21,10 +24,19 @@ namespace Reconciliation
                 for (int month = 1; month < 13; month++)
                 {
                     List<Purchase> monthlyPurchases = purchases.GetByCustomerYearMonth(customerId, 2018, month); // fare variabile anno
-                    
-                    Decimal amountDue = monthlyPurchases.Sum(purchase =>
+
+                    //Decimal amountDue = monthlyPurchases.Sum(purchase =>
+                    //{
+                    //  return purchase.ItemIds.Sum(itemId => prices.getPriceByItemId(itemId)); //TODO total in purchase
+                    //});
+
+                    Decimal amountDue = 0;
+                    monthlyPurchases.ForEach(purchase =>
                     {
-                        return purchase.ItemIds.Sum(itemId => prices.getPriceByItemId(itemId)); //TODO total in purchase
+                        purchase.ItemIds.ForEach(item =>
+                        {
+                            amountDue += prices.getPriceByItemId(item);
+                        });
                     });
 
                     reconciliations.Add(new Reconciliation
@@ -40,8 +52,25 @@ namespace Reconciliation
 
             reconciliations = reconciliations.FindAll(rec => rec.Balance != Decimal.Zero).OrderByDescending(rec => Math.Abs(rec.Balance)).ToList();
 
-            Console.WriteLine(JsonConvert.SerializeObject(reconciliations));
-
+            ReconciliationPrinter reconciliation;
+            if (format == "json")
+            {
+                reconciliation = new JsonReconciliation();
+            }
+            else if (format == "csv")
+            {
+                reconciliation = new CsvReconciliation();
+            }
+            else if (format == "narrative")
+            {
+                reconciliation = new NarrativeReconciliation();
+            }
+            else 
+            {
+                reconciliation = new JsonReconciliation();
+            }
+            
+            reconciliation.printReconciliation(reconciliations);
         }
     }
 }
