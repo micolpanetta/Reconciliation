@@ -2,6 +2,6 @@
 {
     internal interface ReconciliationPrinter
     {
-        void printReconciliation(List<Reconciliation> reconciliation);
+        void PrintReconciliation(List<Reconciliation> reconciliation);
     }
 }

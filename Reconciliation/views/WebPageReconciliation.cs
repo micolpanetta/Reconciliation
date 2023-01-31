@@ -5,7 +5,7 @@ namespace Reconciliation
 {
     internal class WebPageReconciliation : ReconciliationPrinter
     {
-        public void printReconciliation(List<Reconciliation> reconciliations)
+        public void PrintReconciliation(List<Reconciliation> reconciliations)
         {
             using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\output\\PaymentsNotMatched.html")) //TODO migliorare ripetizione
             {
@@ -16,6 +16,11 @@ namespace Reconciliation
                   border:1px solid black;
                 }
                 </style>
+                    
+                    <head>
+                      <title>Reconciliation Webpage</title>
+                    </head>
+
                     <body>
 
                         <h2>Reconciliations</h2>

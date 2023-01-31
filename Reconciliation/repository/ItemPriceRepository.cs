@@ -36,12 +36,10 @@ namespace Reconciliation
                 prices.Add(itemPrice);
 
             }
-            //prices.ForEach(Console.WriteLine);
-            //Console.WriteLine(prices.ElementAt(0).Price + 1);
         }
 
 
-        internal Decimal getPriceByItemId(string ItemId)
+        internal Decimal GetPriceByItemId(string ItemId)
         {
             return prices.Find(item => item.ItemId == ItemId).Price;
         }

@@ -4,7 +4,7 @@ namespace Reconciliation
 {
     internal class CsvReconciliation : ReconciliationPrinter
     {
-        public void printReconciliation(List<Reconciliation> reconciliations)
+        public void PrintReconciliation(List<Reconciliation> reconciliations)
         {
             using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\output\\PaymentsNotMatched.csv"))
             {

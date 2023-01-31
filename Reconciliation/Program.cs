@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using NDesk.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 
@@ -6,56 +8,56 @@ namespace Reconciliation
 {
     internal class Program
     {
-        //TODO verificare metodi iniziano con maiuscola e capire convenzione esatta variabili
         static void Main(string[] args)
         {
-            //capire come passare format
-            String format = (args != null && args.Length > 0 && args[0] != null) ? args[0] : "";
+            //setting default values for the file format and the year of the reconciliation, or setting values passed as args
+            Dictionary<string, object> options = ParseArgs(args);
+            string format = (string) options["format"];
+            int year = (int) options["year"];
 
+            //reading input from files and transform it in objects
             PurchaseRepository purchases = new PurchaseRepository();
             ItemPriceRepository prices = new ItemPriceRepository();
             PaymentRepository payments = new PaymentRepository();
 
             List<Reconciliation> reconciliations = new List<Reconciliation>();
+            //merging the customers ids from payments and purchases
             IEnumerable<String> mergedCustomersIds = payments.GetAllCustomersIds().Union(purchases.GetAllCustomersIds());
 
+            //creating the reconciliations list, not a month is missed 
             mergedCustomersIds.ToList().ForEach(customerId =>
             {
                 for (int month = 1; month < 13; month++)
                 {
-                    List<Purchase> monthlyPurchases = purchases.GetByCustomerYearMonth(customerId, 2018, month); // fare variabile anno
-
-                    //Decimal amountDue = monthlyPurchases.Sum(purchase =>
-                    //{
-                    //  return purchase.ItemIds.Sum(itemId => prices.getPriceByItemId(itemId)); //TODO total in purchase
-                    //});
+                    List<Purchase> monthlyPurchases = purchases.GetByCustomerYearMonth(customerId, year, month);
 
                     Decimal amountDue = 0;
                     monthlyPurchases.ForEach(purchase =>
                     {
                         purchase.ItemIds.ForEach(item =>
                         {
-                            amountDue += prices.getPriceByItemId(item);
+                            amountDue += prices.GetPriceByItemId(item);
                         });
                     });
 
                     reconciliations.Add(new Reconciliation
                     {
                         Customer = customerId,
-                        Year = 2018,
+                        Year = year,
                         Month = month,
                         AmountDue = amountDue,
-                        AmountPayed = payments.GetAmountByCustomerYearMonth(customerId, 2018, month) //verificare convenzione BY
+                        AmountPayed = payments.GetAmountByCustomerYearMonth(customerId, year, month) //todo verificare convenzione BY
                     });
                 }
             });
 
             reconciliations = reconciliations.FindAll(rec => rec.Balance != Decimal.Zero).OrderByDescending(rec => Math.Abs(rec.Balance)).ToList();
 
+            //chosing a printing format 
             ReconciliationPrinter reconciliation;
             switch (format)
             {
-                case "json":  
+                case "json":
                     reconciliation = new JsonReconciliation();
                     break;
                 case "csv":
@@ -71,8 +73,35 @@ namespace Reconciliation
                     reconciliation = new JsonReconciliation();
                     break;
             }
-           
-            reconciliation.printReconciliation(reconciliations);
+
+            reconciliation.PrintReconciliation(reconciliations);
+        }
+
+        private static Dictionary<string, object> ParseArgs(string[] args)
+        {
+            string format = "json";
+            int year = 2018;
+            bool help = false;
+            OptionSet options = new OptionSet() {
+               { "format=", "The file format of the output. \nYou can choose between json, csv, narrative and webpage.", value => format = value },
+               { "year=", "The year of the reconciliation.", (int value) => year = value },
+               { "help", value => help = value != null }
+            };
+            try
+            {
+                options.Parse(args);
+                if (help)
+                {
+                    options.WriteOptionDescriptions(Console.Out);
+                    Environment.Exit(0);
+                }
+            }
+            catch (OptionException e)
+            {
+                Console.WriteLine(e.Message);
+                Environment.Exit(1);
+            }
+            return new Dictionary<string, object>() {{ "format", format }, { "year", year }};
         }
     }
 }

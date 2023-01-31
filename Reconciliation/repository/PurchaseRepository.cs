@@ -30,7 +30,6 @@ namespace Reconciliation
 
                     purchases.Add(purchase);
                 }
-                //purchases.ForEach(Console.WriteLine);
             }
         }
 
@@ -69,5 +68,4 @@ namespace Reconciliation
             return purchases.FindAll(purchase => purchase.CustomerId == Customer && purchase.Date.Year == Year && purchase.Date.Month == Month);
         }
     }
-    
 }
