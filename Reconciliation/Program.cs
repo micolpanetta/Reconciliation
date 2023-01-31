@@ -10,7 +10,7 @@ namespace Reconciliation
         static void Main(string[] args)
         {
             //capire come passare format
-            String format = "webpage";
+            String format = (args != null && args.Length > 0 && args[0] != null) ? args[0] : "";
 
             PurchaseRepository purchases = new PurchaseRepository();
             ItemPriceRepository prices = new ItemPriceRepository();

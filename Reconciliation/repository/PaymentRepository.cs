@@ -5,7 +5,7 @@ namespace Reconciliation
 {
     internal class PaymentRepository
     {
-        private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\Payments.json";
+        private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\input\\Payments.json";
         private List<Payment> payments = new List<Payment>();
 
         public PaymentRepository()

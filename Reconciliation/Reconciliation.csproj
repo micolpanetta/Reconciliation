@@ -12,4 +12,8 @@
     <PackageReference Include="Scriban" Version="5.5.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="files\output\" />
+  </ItemGroup>
+
 </Project>

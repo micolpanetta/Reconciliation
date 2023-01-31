@@ -5,7 +5,7 @@ namespace Reconciliation
     internal class PurchaseRepository
     {
         private int lineIndex = 0;
-        private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\Purchases.dat";
+        private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\input\\Purchases.dat";
         private List<Purchase> purchases = new List<Purchase>();
 
         public PurchaseRepository()

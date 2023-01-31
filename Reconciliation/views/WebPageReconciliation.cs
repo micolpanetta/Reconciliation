@@ -7,7 +7,7 @@ namespace Reconciliation
     {
         public void printReconciliation(List<Reconciliation> reconciliations)
         {
-            using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\PaymentsNotMatched.html"))
+            using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\output\\PaymentsNotMatched.html")) //TODO migliorare ripetizione
             {
                 var html = @"
                 <!DOCTYPE html>

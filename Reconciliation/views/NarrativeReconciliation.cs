@@ -4,7 +4,7 @@
     {
         public void printReconciliation(List<Reconciliation> reconciliations)
         {
-            using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\PaymentsNotMatched.txt"))
+            using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\output\\PaymentsNotMatched.txt"))
             {
                 foreach (Reconciliation rec in reconciliations)
                 {

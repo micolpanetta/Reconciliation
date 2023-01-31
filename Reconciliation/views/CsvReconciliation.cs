@@ -6,7 +6,7 @@ namespace Reconciliation
     {
         public void printReconciliation(List<Reconciliation> reconciliations)
         {
-            using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\PaymentsNotMatched.csv"))
+            using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\output\\PaymentsNotMatched.csv"))
             {
                 foreach (Reconciliation rec in reconciliations)
                 {

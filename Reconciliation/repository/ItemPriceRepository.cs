@@ -6,7 +6,7 @@ namespace Reconciliation
 {
     internal class ItemPriceRepository
     {
-        private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\Prices.xml";
+        private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\input\\Prices.xml";
         private List<ItemPrice> prices = new List<ItemPrice>();
 
         public ItemPriceRepository()
