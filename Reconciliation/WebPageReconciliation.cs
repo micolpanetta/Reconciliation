@@ -1,4 +1,5 @@
 ﻿using Scriban;
+using Scriban.Runtime;
 
 namespace Reconciliation
 {
@@ -45,7 +46,7 @@ namespace Reconciliation
                 ";
 
                 var tpl = Template.Parse(html);
-                var res = tpl.Render(new { reconciliations = reconciliations });
+                var res = tpl.Render(new { reconciliations = reconciliations }, new MemberRenamerDelegate(member => member.Name));
                 writer.WriteLine(res);
             }
         }
