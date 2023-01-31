@@ -10,7 +10,7 @@ namespace Reconciliation
         static void Main(string[] args)
         {
             //capire come passare format
-            String format = "csv";
+            String format = "webpage";
 
             PurchaseRepository purchases = new PurchaseRepository();
             ItemPriceRepository prices = new ItemPriceRepository();
@@ -53,23 +53,25 @@ namespace Reconciliation
             reconciliations = reconciliations.FindAll(rec => rec.Balance != Decimal.Zero).OrderByDescending(rec => Math.Abs(rec.Balance)).ToList();
 
             ReconciliationPrinter reconciliation;
-            if (format == "json")
+            switch (format)
             {
-                reconciliation = new JsonReconciliation();
+                case "json":  
+                    reconciliation = new JsonReconciliation();
+                    break;
+                case "csv":
+                    reconciliation = new CsvReconciliation();
+                    break;
+                case "narrative":
+                    reconciliation = new NarrativeReconciliation();
+                    break;
+                case "webpage":
+                    reconciliation = new WebPageReconciliation();
+                    break;
+                default:
+                    reconciliation = new JsonReconciliation();
+                    break;
             }
-            else if (format == "csv")
-            {
-                reconciliation = new CsvReconciliation();
-            }
-            else if (format == "narrative")
-            {
-                reconciliation = new NarrativeReconciliation();
-            }
-            else 
-            {
-                reconciliation = new JsonReconciliation();
-            }
-            
+           
             reconciliation.printReconciliation(reconciliations);
         }
     }
