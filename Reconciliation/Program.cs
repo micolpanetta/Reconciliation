@@ -1,8 +1,4 @@
 ﻿using NDesk.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
 
 namespace Reconciliation
 {
@@ -53,7 +49,7 @@ namespace Reconciliation
 
             reconciliations = reconciliations.FindAll(rec => rec.Balance != Decimal.Zero).OrderByDescending(rec => Math.Abs(rec.Balance)).ToList();
 
-            //chosing a printing format 
+            //chosing a view
             ReconciliationPrinter reconciliation;
             switch (format)
             {
