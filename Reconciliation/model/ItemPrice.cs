@@ -2,7 +2,7 @@
 {
     internal class ItemPrice
     {
-        private String _itemId;
+        private String _itemId = default!;
         private Decimal _price; 
 
         public String ItemId

@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace Reconciliation
 {
-    internal class PaymentRepository
+    public class PaymentRepository
     {
-        private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\input\\Payments.json";
+        private String filePath = ".\\files\\input\\Payments.json";
         private List<Payment> payments = new List<Payment>();
 
         public PaymentRepository()

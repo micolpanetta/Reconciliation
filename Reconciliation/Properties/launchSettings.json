@@ -2,9 +2,6 @@
   "profiles": {
     "Reconciliation": {
       "commandName": "Project",
-      "environmentVariables": {
-        "FILESPATH": "C:\\Users\\MicolPanetta\\Pictures\\New folder\\Reconciliation\\Reconciliation\\files"
-      },
       "hotReloadEnabled": true
     }
   }

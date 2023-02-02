@@ -1,12 +1,11 @@
 ﻿using System.Globalization;
 using System.Xml;
-using System;
 
 namespace Reconciliation
 {
-    internal class ItemPriceRepository
+    public class ItemPriceRepository
     {
-        private String filePath = Environment.GetEnvironmentVariable("FILESPATH") + "\\input\\Prices.xml";
+        private String filePath = ".\\files\\input\\Prices.xml";
         private List<ItemPrice> prices = new List<ItemPrice>();
 
         public ItemPriceRepository()
@@ -37,7 +36,6 @@ namespace Reconciliation
 
             }
         }
-
 
         internal Decimal GetPriceByItemId(string ItemId)
         {

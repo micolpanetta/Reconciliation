@@ -1,13 +1,12 @@
 ﻿using Newtonsoft.Json;
-using System.Diagnostics;
 
 namespace Reconciliation
 {
     internal class Payment
     {
         [JsonProperty(PropertyName = "Customer")]
-        private String _customerId;
-        
+        private String _customerId = default!;
+
         private int _year;
         private int _month;
         private Decimal _amount;

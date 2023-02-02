@@ -2,85 +2,63 @@
 
 namespace Reconciliation
 {
-    internal class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            //setting default values for the file format and the year of the reconciliation, or setting values passed as args
+            //setting default values for file format, year of the reconciliation and output path or setting values passed as args
             Dictionary<string, object> options = ParseArgs(args);
             string format = (string) options["format"];
             int year = (int) options["year"];
+            string path = (string) options["path"];
 
-            //reading input from files and transform it in objects
+            //reading input from files and transforming it into objects
             PurchaseRepository purchases = new PurchaseRepository();
             ItemPriceRepository prices = new ItemPriceRepository();
             PaymentRepository payments = new PaymentRepository();
 
-            List<Reconciliation> reconciliations = new List<Reconciliation>();
-            //merging the customers ids from payments and purchases
-            IEnumerable<String> mergedCustomersIds = payments.GetAllCustomersIds().Union(purchases.GetAllCustomersIds());
-
-            //creating the reconciliations list, not a month is missed 
-            mergedCustomersIds.ToList().ForEach(customerId =>
-            {
-                for (int month = 1; month < 13; month++)
-                {
-                    List<Purchase> monthlyPurchases = purchases.GetByCustomerYearMonth(customerId, year, month);
-
-                    Decimal amountDue = 0;
-                    monthlyPurchases.ForEach(purchase =>
-                    {
-                        purchase.ItemIds.ForEach(item =>
-                        {
-                            amountDue += prices.GetPriceByItemId(item);
-                        });
-                    });
-
-                    reconciliations.Add(new Reconciliation
-                    {
-                        Customer = customerId,
-                        Year = year,
-                        Month = month,
-                        AmountDue = amountDue,
-                        AmountPayed = payments.GetAmountByCustomerYearMonth(customerId, year, month) //todo verificare convenzione BY
-                    });
-                }
-            });
-
-            reconciliations = reconciliations.FindAll(rec => rec.Balance != Decimal.Zero).OrderByDescending(rec => Math.Abs(rec.Balance)).ToList();
+            Reconciliator reconciliator = new Reconciliator(purchases, prices, payments);
+            List<Reconciliation> reconciliations = reconciliator.reconciliate(year); 
 
             //chosing a view
-            ReconciliationPrinter reconciliation;
+            ReconciliationFormatter formatter;
             switch (format)
             {
                 case "json":
-                    reconciliation = new JsonReconciliation();
+                    formatter = new JsonReconciliation();
                     break;
                 case "csv":
-                    reconciliation = new CsvReconciliation();
+                    formatter = new CsvReconciliation();
                     break;
                 case "narrative":
-                    reconciliation = new NarrativeReconciliation();
+                    formatter = new NarrativeReconciliation();
                     break;
                 case "webpage":
-                    reconciliation = new WebPageReconciliation();
+                    formatter = new WebPageReconciliation();
                     break;
                 default:
-                    reconciliation = new JsonReconciliation();
+                    formatter = new JsonReconciliation();
                     break;
             }
 
-            reconciliation.PrintReconciliation(reconciliations);
+            String output = formatter.FormatReconciliation(reconciliations);
+            
+            //writing into a file
+            File.WriteAllText(Path.Join(path, "PaymentsNotMatched" + formatter.getExtension()), output);
+
         }
 
+        //console options
         private static Dictionary<string, object> ParseArgs(string[] args)
         {
             string format = "json";
             int year = 2018;
+            string path = ".\\";
             bool help = false;
             OptionSet options = new OptionSet() {
                { "format=", "The file format of the output. \nYou can choose between json, csv, narrative and webpage.", value => format = value },
                { "year=", "The year of the reconciliation.", (int value) => year = value },
+               { "path=", "The path where the output file will be saved. Default is the same path as the .exe file.", value => path = value },
                { "help", value => help = value != null }
             };
             try
@@ -97,7 +75,7 @@ namespace Reconciliation
                 Console.WriteLine(e.Message);
                 Environment.Exit(1);
             }
-            return new Dictionary<string, object>() {{ "format", format }, { "year", year }};
+            return new Dictionary<string, object>() { { "format", format }, { "year", year }, { "path", path } };
         }
     }
 }

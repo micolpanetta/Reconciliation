@@ -2,9 +2,9 @@
 {
     internal class Purchase
     {
-        private String _customerId;
+        private String _customerId = default!;
         private DateTime _date;
-        private List<String> _itemIds;
+        private List<String> _itemIds = default!;
         
         public String CustomerId
         {
@@ -26,16 +26,5 @@
         {
             return "CustomerId: " + CustomerId + " Date: " + Date + " ItemIds: " + string.Join(",", ItemIds);
         }
-
-        //public override string ToString()
-        //{
-        //    return GetType().GetProperties()
-        //        .Select(info => (info.Name, Value: info.GetValue(this, null) ?? "(null)"))
-        //        .Aggregate(
-        //            new StringBuilder(),
-        //            (sb, pair) => sb.AppendLine($"{pair.Name}: {pair.Value}"),
-        //            sb => sb.ToString());
-        //}
     }
-
 }

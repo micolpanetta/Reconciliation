@@ -1,9 +1,9 @@
 ﻿namespace Reconciliation
 {
-    internal class Reconciliation
+    public class Reconciliation
     {
 
-        private String _customer;
+        private String _customer = default!;
         private int _year;
         private int _month;
         private Decimal _amountDue;

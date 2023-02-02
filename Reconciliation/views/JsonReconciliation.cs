@@ -2,12 +2,16 @@
 
 namespace Reconciliation
 {
-    internal class JsonReconciliation : ReconciliationPrinter
+    public class JsonReconciliation : ReconciliationFormatter
     {
-        public void PrintReconciliation(List<Reconciliation> reconciliations)
+        public string FormatReconciliation(List<Reconciliation> reconciliations)
         {
-            var jsonString = JsonConvert.SerializeObject(reconciliations);
-            File.WriteAllText(Environment.GetEnvironmentVariable("FILESPATH") + "\\output\\PaymentsNotMatched.json", jsonString); //TODO creare cartella per output
+            return JsonConvert.SerializeObject(reconciliations);
+        }
+
+        public string getExtension()
+        {
+            return ".json";
         }
     }
 }

@@ -1,23 +1,30 @@
-﻿using System.Globalization;
+﻿using Reconciliation;
+using System.Globalization;
 
 namespace Reconciliation
 {
-    internal class CsvReconciliation : ReconciliationPrinter
+    public class CsvReconciliation : ReconciliationFormatter
     {
-        public void PrintReconciliation(List<Reconciliation> reconciliations)
+        public string FormatReconciliation(List<Reconciliation> reconciliations)
         {
-            using (StreamWriter writer = new StreamWriter(Environment.GetEnvironmentVariable("FILESPATH") + "\\output\\PaymentsNotMatched.csv"))
+            List<String> formatted = new List<String>();
+
+            foreach (Reconciliation rec in reconciliations)
             {
-                foreach (Reconciliation rec in reconciliations)
-                {
 
-                    string amountDue = rec.AmountDue.ToString(CultureInfo.InvariantCulture);
-                    string amountPayed = rec.AmountPayed.ToString(CultureInfo.InvariantCulture);
-                    string balance = rec.Balance.ToString(CultureInfo.InvariantCulture);
+                string amountDue = rec.AmountDue.ToString(CultureInfo.InvariantCulture);
+                string amountPayed = rec.AmountPayed.ToString(CultureInfo.InvariantCulture);
+                string balance = rec.Balance.ToString(CultureInfo.InvariantCulture);
 
-                    writer.WriteLine($"{rec.Customer},{rec.Year},{rec.Month},{amountDue},{amountPayed},{balance}");
-                }
+                formatted.Add($"{rec.Customer},{rec.Year},{rec.Month},{amountDue},{amountPayed},{balance}");
             }
+
+            return String.Join("\n", formatted.ToArray());
+        }
+
+        public string getExtension()
+        {
+            return ".csv";
         }
     }
 }

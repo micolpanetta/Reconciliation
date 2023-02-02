@@ -8,13 +8,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NDesk.Options" Version="0.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Scriban" Version="5.5.2" />
+    <None Remove="files\input\Payments.json" />
+    <None Remove="files\input\Prices.xml" />
+    <None Remove="files\input\Purchases.dat" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="files\output\" />
+    <Content Include="files\input\Payments.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\input\Prices.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\input\Purchases.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NDesk.Options" Version="0.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Scriban" Version="5.5.2" />
   </ItemGroup>
 
 </Project>
